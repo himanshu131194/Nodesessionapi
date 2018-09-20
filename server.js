@@ -7,6 +7,7 @@ const app = express();
 const db = mongoose.connect( 'mongodb://olx:olx123@ds159812.mlab.com:59812/olx', { useNewUrlParser: true })
                    .then(conn => conn).catch(console.error);
 
+//app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 //MIDDLEWARE TO CHECK DB IS CONNECTED OR NOT
 app.use((req, res, next)=>{
@@ -29,13 +30,11 @@ app.use(session({
          })
 }));
 
-
-require('./api/userController');
-
+require('./api/userController')(app);
 
 //app.use('/users', api);
-app.listen('8000', (err)=> {
-     console.log("Connted to db");
+app.listen('4000', (err)=> {
+     console.log("Connted to db port 4000");
      if(err){
         console.log(err);
      }
