@@ -4,21 +4,30 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo')(session);
 const app = express();
-const db = mongoose.connect( 'mongodb://olx:olx123@ds159812.mlab.com:59812/olx', { useNewUrlParser: true })
+const db = mongoose.connect( 'mongodb://books:books123@ds243931.mlab.com:43931/books', { useNewUrlParser: true })
                    .then(conn => conn).catch(console.error);
 
-//app.use(bodyParser.urlencoded({ extended: false }))
+
+
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 //MIDDLEWARE TO CHECK DB IS CONNECTED OR NOT
 app.use((req, res, next)=>{
     Promise.resolve(db)
            .then((connetion, err)=>{
-                (typeof connetion !== 'undefined')
-                ? next()
-                : next(new  Error('Mongo Error'))
+                if(typeof connetion !== 'undefined'){
+                   next();
+                }else{
+                   next(new  Error('Mongo Error'))
+                }
            });
 });
-
+// {
+//              "username" : "himsanshusa",
+//              "password": "12345678",
+//              "email": "himanssh112@gmail.com",
+//              "name": "himanshu"
+// }
 //STORE SESSION IN MONGODB
 app.use(session({
          secret: 'mysecret@123',
@@ -27,6 +36,7 @@ app.use(session({
          store: new MongoStore({
              collection: 'sessions',
              mongooseConnection: mongoose.connection,
+             ttl: 1*60*60
          })
 }));
 
