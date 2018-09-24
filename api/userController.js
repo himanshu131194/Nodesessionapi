@@ -75,7 +75,7 @@ api.get('/books', async (req, res) => {
     let result = await book;
     res.json({
        status: 200,
-       data : result
+       books : result
     })
   }catch(error) {
     res.json({
